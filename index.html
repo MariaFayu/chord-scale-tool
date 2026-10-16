@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ===== SEO 基础 ===== -->
+    <title>和弦与音阶工具 - 在线查和弦构成、音阶与和弦进行</title>
+    <meta name="description" content="免费在线和弦与音阶查询工具。支持 37 种和弦（大三、小三、属七、大七、小七、9、11、13、变属等）和 40+ 种音阶（大调、小调、五声、布鲁斯、教会调式、爵士音阶等）。可显示调内级数、顺阶和弦、音程名称，内置钢琴、吉他、贝斯指板，并提供节拍器与和弦进行播放。">
+    <meta name="keywords" content="和弦,音阶,和弦构成,音阶查询,和弦级数,顺阶和弦,爵士和弦,五声音阶,布鲁斯音阶,吉他指板,钢琴键盘,节拍器,和弦进行">
+    <meta name="author" content="和弦与音阶工具">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com/">
+
+    <!-- ===== 移动端 / 主题色 ===== -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="和弦与音阶">
+
+    <!-- ===== Open Graph ===== -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="和弦与音阶工具 - 在线查询与试听">
+    <meta property="og:description" content="在线查询任意和弦构成、音阶指法、调内级数，支持钢琴、吉他、贝斯三种乐器，内置节拍器与和弦进行播放。">
+    <meta property="og:url" content="https://example.com/">
+    <meta property="og:site_name" content="和弦与音阶工具">
+    <meta property="og:locale" content="zh_CN">
+
+    <!-- ===== Twitter Card ===== -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="和弦与音阶工具">
+    <meta name="twitter:description" content="在线查询和弦构成、音阶、调内级数，支持钢琴/吉他/贝斯指板与节拍器。">
+
+    <!-- ===== Favicon ===== -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232563eb'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' fill='white' font-family='sans-serif'%3E♫%3C/text%3E%3C/svg%3E">
+
+    <!-- ===== 结构化数据 ===== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "和弦与音阶工具",
+      "description": "在线查询和弦构成、音阶与调内级数，支持钢琴、吉他、贝斯指板，内置节拍器与和弦进行播放。",
+      "applicationCategory": "MusicApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+      "inLanguage": "zh-CN"
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --active-color: #3b82f6;
+            --gray-bg: #f9fafb;
+            --border-color: #e5e7eb;
+            --text-main: #111827;
+            --text-secondary: #6b7280;
+            --missing-color: #fca5a5;
+            --missing-text: #ef4444;
+            --success-color: #10b981;
+            --fb-dot: #27272a;
+            --fb-note-size: 17px;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; background-color: var(--gray-bg); color: var(--text-main);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 16px; min-height: 100vh;
+        }
+        .app-container {
+            background: #fff; width: 100%; max-width: 1000px;
+            border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 20px 22px; display: flex; flex-direction: column; gap: 18px;
+        }
+
+        /* ===== 页脚版权 ===== */
+        .page-footer {
+            max-width: 1000px; width: 100%;
+            margin-top: 14px;
+            padding: 10px 0 4px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+        .page-footer a {
+            color: #9ca3af;
+            text-decoration: none;
+            border-bottom: 1px dotted #cbd5e1;
+            transition: color 0.2s;
+        }
+        .page-footer a:hover {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .page-footer .sep {
+            margin: 0 6px;
+            opacity: 0.5;
+        }
+
+        .header {
+            font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 12px;
+        }
+        .header svg { width: 18px; height: 18px; fill: var(--primary-color); }
+
+        .tabs { display: flex; background: #f3f4f6; border-radius: 8px; padding: 4px; }
+        .tab-btn {
+            flex: 1; padding: 8px; border: none; background: transparent; cursor: pointer;
+            border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-secondary); transition: all 0.2s;
+        }
+        .tab-btn.active { background: #fff; color: var(--primary-color); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+        .controls { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+        .control-group { display: flex; flex-direction: column; gap: 5px; }
+        .control-group label { font-size: 12px; color: var(--text-secondary); }
+        select {
+            padding: 7px 11px; border: 1px solid var(--border-color); border-radius: 6px;
+            font-size: 13px; outline: none; min-width: 150px; background-color: #fff; cursor: pointer;
+        }
+        select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
+        .result-title-area { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .main-title { font-size: 22px; font-weight: bold; }
+
+        .symbol-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 12px; border-radius: 8px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1.5px solid var(--active-color);
+            color: var(--primary-color);
+            font-family: "SF Mono", "Consolas", "Menlo", monospace;
+            font-size: 15px; font-weight: 700; letter-spacing: 0.5px;
+            user-select: all; cursor: copy;
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12);
+            transition: all 0.2s;
+        }
+        .symbol-badge:hover {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+        }
+        .symbol-badge::before { content: '♫'; font-size: 12px; opacity: 0.65; }
+
+        .degree-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 12px; border-radius: 8px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1.5px solid #f59e0b;
+            color: #92400e;
+            font-family: "SF Mono", "Consolas", "Menlo", monospace;
+            font-size: 15px; font-weight: 700;
+            box-shadow: 0 1px 3px rgba(245, 158, 11, 0.15);
+        }
+        .degree-badge::before {
+            content: '级';
+            font-family: -apple-system, sans-serif;
+            font-size: 10px; opacity: 0.7; font-weight: 500;
+        }
+        .degree-badge.out-of-key {
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            border-color: #ef4444; color: #991b1b;
+        }
+        .degree-badge.hidden { display: none; }
+
+        .play-btn {
+            display: flex; align-items: center; gap: 5px; padding: 6px 13px;
+            border: 1px solid var(--border-color); border-radius: 18px; background: #fff;
+            cursor: pointer; font-size: 12px; transition: all 0.2s; color: var(--text-main);
+            margin-left: auto;
+        }
+        .play-btn:hover { background: #eff6ff; border-color: var(--primary-color); color: var(--primary-color); }
+        .play-btn svg { width: 13px; height: 13px; fill: currentColor; }
+        .sub-info { font-size: 12px; color: var(--text-secondary); margin-top: -8px; }
+
+        .notes-display { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .note-tag {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 5px 12px; border-radius: 6px;
+            border: 1px solid var(--border-color); transition: all 0.2s;
+            min-width: 60px;
+        }
+        .note-tag.active { background: #eff6ff; border-color: var(--active-color); }
+        .note-tag.active .note-name { color: var(--primary-color); }
+        .note-tag.missing { background: #fef2f2; border-color: var(--missing-color); }
+        .note-tag.missing .note-name { color: var(--missing-text); }
+        .note-name {
+            font-size: 14px; font-weight: 700;
+            font-family: "SF Mono", "Consolas", "Menlo", monospace;
+            line-height: 1.2;
+        }
+        .note-sub {
+            font-size: 10px; color: var(--text-secondary);
+            margin-top: 2px; white-space: nowrap; line-height: 1.25;
+        }
+
+        .instrument-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; border-top: 1px solid var(--border-color);
+            padding-top: 14px; margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        .tip-text {
+            font-size: 12px; color: var(--text-secondary);
+            display: flex; align-items: center; gap: 5px;
+            transition: color 0.2s;
+        }
+        .tip-text::before {
+            content: '💡'; font-size: 12px; opacity: 0.7;
+        }
+        .tip-text.playing {
+            color: #dc2626; font-weight: 500;
+        }
+        .tip-text.playing::before { content: '🔴'; opacity: 1; }
+        .instrument-switcher { display: flex; gap: 6px; }
+        .instr-btn {
+            padding: 5px 16px; border: 1px solid var(--border-color); border-radius: 16px;
+            background: #fff; cursor: pointer; font-size: 12px; color: var(--text-secondary); transition: all 0.2s;
+        }
+        .instr-btn.active { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+        .instr-btn:hover:not(.active) { border-color: var(--text-main); color: var(--text-main); }
+
+        .keyboard-wrapper { overflow-x: auto; padding-bottom: 8px; margin-top: 6px; }
+        .keyboard { display: flex; position: relative; height: 150px; user-select: none; min-width: 600px; }
+        .key {
+            position: relative; border: 1px solid #bbb; border-top: none;
+            border-radius: 0 0 4px 4px; cursor: pointer; box-sizing: border-box;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            align-items: center; padding-bottom: 9px; font-size: 10px; transition: all 0.1s;
+        }
+        .key.white { width: 39px; height: 100%; background: white; z-index: 1; color: #aaa; }
+        .key.black {
+            width: 23px; height: 95px; background: #1a1a1a;
+            position: absolute; z-index: 2; border-radius: 0 0 3px 3px;
+            border: 1px solid #000; border-top: none; color: #888; padding-bottom: 7px;
+        }
+        .key.active { background: var(--active-color) !important; border-color: var(--active-color) !important; color: white !important; }
+        .key.playing-chord { background: #f59e0b !important; border-color: #f59e0b !important; color: white !important; }
+        .key.playing-root { background: #ef4444 !important; border-color: #ef4444 !important; color: white !important; }
+        .key:active { transform: scaleY(0.98); transform-origin: top; }
+        .key:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+
+        .fretboard-wrapper {
+            overflow-x: auto; overflow-y: hidden;
+            margin: 12px 20px 0; padding-bottom: 30px;
+            border-radius: 10px; display: flex; justify-content: center;
+        }
+        .fretboard {
+            position: relative; width: 740px; height: 140px; flex-shrink: 0;
+            background: linear-gradient(180deg, #4a3728 0%, #3d2b1f 50%, #2e1f15 100%);
+            border-radius: 10px; padding: 16px 30px 24px 30px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .fret-marker {
+            position: absolute; width: 9px; height: 9px; border-radius: 50%;
+            background: var(--fb-dot); opacity: 0.4; transform: translate(-50%, -50%); z-index: 0;
+        }
+        .fret-marker.double { width: 7px; height: 7px; }
+        .string {
+            position: absolute; left: 30px; right: 25px; z-index: 5;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+        }
+        .string::before {
+            content: attr(data-tuning); position: absolute; left: -28px; top: 50%;
+            transform: translateY(-50%); color: #d4b896; font-size: 11px; font-weight: 600;
+            width: 20px; text-align: right;
+        }
+        .string-1 { height: 1px;   background: linear-gradient(180deg, #f1f5f9, #cbd5e1); top: 6%; }
+        .string-2 { height: 1.4px; background: linear-gradient(180deg, #f1f5f9, #cbd5e1); top: 23.6%; }
+        .string-3 { height: 1.8px; background: linear-gradient(180deg, #f1f5f9, #cbd5e1); top: 41.2%; }
+        .string-4 { height: 2.6px; background: linear-gradient(180deg, #f1f5f9, #cbd5e1); top: 58.8%; }
+        .string-5 { height: 3.4px; background: linear-gradient(180deg, #f1f5f9, #cbd5e1); top: 76.4%; }
+        .string-6 { height: 4.2px; background: linear-gradient(180deg, #f1f5f9, #cbd5e1); top: 94%; }
+        .fretboard.bass .string-1 { height: 1.5px; top: 12%; }
+        .fretboard.bass .string-2 { height: 2.2px; top: 37.33%; }
+        .fretboard.bass .string-3 { height: 2.9px; top: 62.67%; }
+        .fretboard.bass .string-4 { height: 3.6px; top: 88%; }
+        .fret-line {
+            position: absolute; top: 0; bottom: 0; width: 2px;
+            background: linear-gradient(180deg, #d4b896, #c4a882, #d4b896);
+            border-radius: 1px; z-index: 1;
+        }
+        .fret-line.nut {
+            width: 6px; background: #f5e6c8; z-index: 1; left: 30px;
+            box-shadow: 1px 0 2px rgba(0,0,0,0.3);
+        }
+        .fret-number {
+            position: absolute; bottom: -20px; color: #8b7355;
+            font-size: 9px; font-weight: 600; transform: translateX(-50%);
+        }
+        .note-point {
+            position: absolute;
+            width: var(--fb-note-size); height: var(--fb-note-size);
+            background: var(--primary-color);
+            border: 1.5px solid rgba(255,255,255,0.9);
+            border-radius: 50%; color: white; font-size: 8px; font-weight: 600;
+            display: flex; justify-content: center; align-items: center;
+            transform: translate(-50%, -50%); z-index: 10; cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            transition: transform 0.1s, box-shadow 0.15s;
+        }
+        .note-point:hover { transform: translate(-50%, -50%) scale(1.2); }
+        .note-point:focus-visible {
+            outline: 2px solid #fbbf24;
+            outline-offset: 2px;
+        }
+        .note-point.in-chord { background: #f59e0b; border-color: #fff; }
+        .note-point.root-note { background: #ef4444; border-color: #fff; }
+        .note-point.playing-pulse {
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.55), 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .note-point.root-note.playing-pulse {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.55), 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .match-rate { font-size: 12px; color: var(--text-secondary); margin-left: auto; white-space: nowrap; }
+        .match-rate.success { color: var(--success-color); font-weight: 600; }
+        .match-item {
+            background: #eff6ff; padding: 12px 14px; border-radius: 8px;
+            display: flex; flex-direction: column; gap: 8px;
+            border: 1px solid #dbeafe; width: 100%; transition: border-color 0.2s;
+        }
+        .match-item:hover { border-color: var(--primary-color); }
+        .match-header { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px; }
+        .match-title { font-weight: bold; color: var(--primary-color); font-size: 13px; line-height: 1.35; }
+        .match-title-sub { color: var(--text-secondary); font-weight: normal; font-size: 11px; margin-left: 4px; }
+
+        .diatonic-view {
+            margin-top: 4px; border-top: 1px solid var(--border-color); padding-top: 16px;
+        }
+        .diatonic-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 10px; flex-wrap: wrap;
+        }
+        .diatonic-title { font-size: 14px; font-weight: 600; }
+        .diatonic-subtitle {
+            font-size: 12px; color: var(--text-secondary);
+            font-family: "SF Mono", "Consolas", "Menlo", monospace;
+        }
+        .diatonic-header select { font-size: 12px; padding: 4px 8px; min-width: 96px; margin-left: auto; }
+        .diatonic-list { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        @media (max-width: 800px) { .diatonic-list { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 500px) { .diatonic-list { grid-template-columns: repeat(2, 1fr); } }
+        .diatonic-card {
+            background: #f9fafb; border: 1.5px solid var(--border-color);
+            border-radius: 8px; padding: 8px 6px; cursor: pointer;
+            transition: all 0.2s; text-align: center;
+            display: flex; flex-direction: column; gap: 3px; position: relative;
+        }
+        .diatonic-card:hover { border-color: var(--primary-color); background: #eff6ff; transform: translateY(-1px); }
+        .diatonic-card.active { border-color: var(--primary-color); background: #dbeafe; box-shadow: 0 2px 5px rgba(37, 99, 235, 0.15); }
+        .diatonic-card.playing { border-color: #ef4444 !important; background: #fee2e2 !important; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important; }
+        .diatonic-card .degree { font-size: 14px; font-weight: 700; color: #92400e; font-family: "SF Mono","Consolas","Menlo",monospace; line-height: 1.15; }
+        .diatonic-card .symbol { font-size: 12px; font-weight: 600; color: var(--primary-color); font-family: "SF Mono","Consolas","Menlo",monospace; line-height: 1.15; }
+        .diatonic-card .notes { font-size: 9px; color: var(--text-secondary); font-family: "SF Mono","Consolas","Menlo",monospace; line-height: 1.25; word-break: break-word; }
+        .diatonic-add-btn {
+            position: absolute; top: 3px; right: 3px; width: 18px; height: 18px;
+            border: none; background: rgba(37, 99, 235, 0.1); color: var(--primary-color);
+            border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 700;
+            line-height: 1; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: all 0.2s; padding: 0;
+        }
+        .diatonic-card:hover .diatonic-add-btn { opacity: 1; }
+        .diatonic-add-btn:hover { background: var(--primary-color); color: #fff; }
+
+        .player-section {
+            margin-top: 4px; border-top: 1px solid var(--border-color);
+            padding-top: 16px; display: flex; flex-direction: column; gap: 12px;
+        }
+        .player-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .player-title { font-size: 14px; font-weight: 600; }
+        .player-controls { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+        .player-control-group { display: flex; flex-direction: column; gap: 4px; }
+        .player-control-group label { font-size: 11px; color: var(--text-secondary); }
+        .player-control-group input,
+        .player-control-group select {
+            padding: 5px 8px; border: 1px solid var(--border-color); border-radius: 5px;
+            font-size: 12px; background: #fff; cursor: pointer; outline: none; font-family: inherit;
+        }
+        .player-control-group input:focus,
+        .player-control-group select:focus { border-color: var(--primary-color); }
+        #bpmInput { width: 65px; text-align: center; font-family: "SF Mono","Consolas","Menlo",monospace; font-weight: 600; }
+        .player-btn {
+            padding: 6px 13px; border: 1px solid var(--border-color); border-radius: 6px;
+            background: #fff; cursor: pointer; font-size: 12px; color: var(--text-main);
+            transition: all 0.2s; font-family: inherit;
+        }
+        .player-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .player-btn.primary {
+            background: var(--primary-color); color: #fff; border-color: var(--primary-color);
+            font-weight: 600; padding: 6px 20px;
+        }
+        .player-btn.primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
+        .player-btn.primary.playing { background: #dc2626; border-color: #dc2626; }
+        .player-btn.primary.playing:hover { background: #b91c1c; border-color: #b91c1c; }
+        .player-btn.metronome-btn.active { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+        .beat-indicator { display: flex; gap: 9px; align-items: center; padding: 2px 0; min-height: 18px; }
+        .beat-dot {
+            width: 12px; height: 12px; border-radius: 50%;
+            background: #e5e7eb; transition: all 0.08s;
+        }
+        .beat-dot.downbeat { background: #cbd5e1; }
+        .beat-dot.active {
+            background: var(--primary-color); transform: scale(1.35);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        .beat-dot.downbeat.active { background: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); }
+        .progression-display {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 12px; background: #f9fafb;
+            border: 1px solid var(--border-color); border-radius: 7px;
+            min-height: 48px; flex-wrap: wrap;
+        }
+        .progression-label { font-size: 12px; color: var(--text-secondary); padding-top: 4px; white-space: nowrap; }
+        .progression-list { display: flex; flex-wrap: wrap; gap: 7px; flex: 1; align-items: center; min-height: 24px; }
+        .progression-chip {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 8px 3px 10px; background: #fff;
+            border: 1.5px solid var(--border-color); border-radius: 5px;
+            font-size: 12px; transition: all 0.15s;
+        }
+        .progression-chip:hover { border-color: var(--primary-color); }
+        .progression-chip.playing {
+            background: #dbeafe; border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .chip-roman { color: #92400e; font-family: "SF Mono","Consolas","Menlo",monospace; font-weight: 700; font-size: 10px; }
+        .chip-symbol { color: var(--primary-color); font-family: "SF Mono","Consolas","Menlo",monospace; font-weight: 700; font-size: 12px; }
+        .chip-remove {
+            border: none; background: transparent; cursor: pointer;
+            color: #9ca3af; font-size: 14px; line-height: 1;
+            padding: 0 2px; border-radius: 3px; transition: all 0.15s;
+        }
+        .chip-remove:hover { background: #fee2e2; color: #ef4444; }
+        .clear-btn {
+            padding: 3px 10px; border: 1px solid var(--border-color); border-radius: 5px;
+            background: #fff; cursor: pointer; font-size: 11px;
+            color: var(--text-secondary); transition: all 0.2s;
+            align-self: flex-start; font-family: inherit;
+        }
+        .clear-btn:hover { border-color: #ef4444; color: #ef4444; }
+
+        .preset-area {
+            display: flex; flex-direction: column; gap: 6px;
+            padding: 10px 12px; background: #fafafa;
+            border: 1px solid var(--border-color); border-radius: 7px;
+        }
+        .preset-group {
+            display: flex; align-items: flex-start; gap: 10px;
+        }
+        .preset-group-label {
+            font-size: 11px; color: var(--text-secondary); font-weight: 600;
+            min-width: 42px; padding-top: 4px;
+            flex-shrink: 0;
+        }
+        .preset-group-buttons {
+            display: flex; flex-wrap: wrap; gap: 5px; flex: 1;
+        }
+        .preset-btn {
+            padding: 3px 10px; border: 1px solid var(--border-color); border-radius: 12px;
+            background: #fff; cursor: pointer; font-size: 11px;
+            color: var(--text-main); transition: all 0.2s;
+            font-family: "SF Mono", "Consolas", "Menlo", monospace;
+        }
+        .preset-btn:hover {
+            background: #eff6ff; border-color: var(--primary-color); color: var(--primary-color);
+        }
+        .preset-hint {
+            font-size: 11px; color: var(--text-secondary);
+            padding: 6px 10px; margin-top: 2px;
+            background: #f0f9ff; border-left: 3px solid var(--active-color);
+            border-radius: 3px;
+            min-height: 16px;
+            font-style: italic;
+            transition: all 0.15s;
+        }
+
+        @media (max-width: 640px) {
+            .app-container { padding: 14px; gap: 14px; }
+            .main-title { font-size: 18px; }
+            .symbol-badge { font-size: 13px; padding: 3px 10px; }
+            .degree-badge { font-size: 13px; padding: 3px 10px; }
+            .controls { gap: 8px; }
+            select { min-width: 100px; font-size: 12px; padding: 6px 9px; }
+            .fretboard-wrapper { margin-left: 6px; margin-right: 6px; padding-bottom: 26px; }
+            .note-tag { min-width: 50px; padding: 4px 9px; }
+            .note-name { font-size: 13px; }
+            .note-sub { font-size: 9px; }
+            .player-controls { gap: 8px; }
+            .preset-group-label { min-width: 34px; font-size: 10px; }
+            .page-footer { font-size: 10px; margin-top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        和弦与音阶工具
+    </div>
+
+    <div class="tabs" role="tablist">
+        <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('chord')">和弦</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('scale')">音阶</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('match')">音阶匹配</button>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="rootNote">根音</label>
+            <select id="rootNote"></select>
+        </div>
+        <div class="control-group">
+            <label id="typeSelectLabel" for="typeSelect">和弦类型</label>
+            <select id="typeSelect"></select>
+        </div>
+        <div class="control-group" id="keySelectGroup">
+            <label for="keySelect">参照调</label>
+            <select id="keySelect"></select>
+        </div>
+    </div>
+
+    <div id="view-chord-scale">
+        <div class="result-title-area">
+            <div class="main-title" id="resultTitle">C7</div>
+            <div class="symbol-badge" id="symbolBadge" title="点击复制和弦记号">C7</div>
+            <div class="degree-badge" id="degreeBadge" title="该和弦在参照调中的级数">I</div>
+            <button class="play-btn" onclick="playCurrentMode()">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                <span id="playBtnText">试听和弦</span>
+            </button>
+        </div>
+        <div class="sub-info" id="resultSubInfo"></div>
+        <div class="notes-display" id="notesDisplay"></div>
+    </div>
+
+    <div id="view-match" style="display: none;">
+        <div class="sub-info" style="margin-bottom: 12px;">
+            以和弦根音构建的音阶中，能覆盖其和弦音的选择（允许至少缺 1 个音）
+        </div>
+        <div id="matchList" style="display: flex; flex-direction: column; gap: 10px; width: 100%;"></div>
+    </div>
+
+    <div id="diatonic-section" class="diatonic-view">
+        <div class="diatonic-header">
+            <span class="diatonic-title">调内顺阶和弦</span>
+            <span class="diatonic-subtitle" id="diatonicSubtitle">C 大调</span>
+            <select id="diatonicScaleType" aria-label="顺阶和弦的调式类型">
+                <option value="major">大调</option>
+                <option value="natural_minor">自然小调</option>
+                <option value="harmonic_minor">和声小调</option>
+            </select>
+        </div>
+        <div id="diatonicList" class="diatonic-list"></div>
+    </div>
+
+    <div class="instrument-bar">
+        <span class="tip-text" id="tipText">点击琴键可试听单音 · C2–B4</span>
+        <div class="instrument-switcher">
+            <button class="instr-btn active" onclick="setInstrument('piano')">钢琴</button>
+            <button class="instr-btn" onclick="setInstrument('guitar')">吉他</button>
+            <button class="instr-btn" onclick="setInstrument('bass')">贝斯</button>
+        </div>
+    </div>
+
+    <div id="instrument-view"></div>
+
+    <div id="player-section" class="player-section">
+        <div class="player-header">
+            <span class="player-title">节拍器与和弦进行</span>
+        </div>
+
+        <div class="player-controls">
+            <div class="player-control-group">
+                <label for="bpmInput">BPM</label>
+                <input type="number" id="bpmInput" value="100" min="40" max="240" step="1">
+            </div>
+            <div class="player-control-group">
+                <label for="timeSignature">拍号</label>
+                <select id="timeSignature">
+                    <option value="4" selected>4/4</option>
+                    <option value="3">3/4</option>
+                    <option value="2">2/4</option>
+                    <option value="6">6/8</option>
+                </select>
+            </div>
+            <div class="player-control-group">
+                <label for="beatsPerChordSelect">每和弦</label>
+                <select id="beatsPerChordSelect">
+                    <option value="1">1 拍</option>
+                    <option value="2" selected>2 拍</option>
+                    <option value="4">4 拍</option>
+                    <option value="8">8 拍</option>
+                </select>
+            </div>
+            <button id="metronomeToggle" class="player-btn metronome-btn active">🔔 节拍器 开</button>
+            <button id="playBtn" class="player-btn primary">▶ 播放</button>
+        </div>
+
+        <div class="beat-indicator" id="beatIndicator" aria-hidden="true"></div>
+
+        <div class="progression-display">
+            <span class="progression-label">和弦进行：</span>
+            <div class="progression-list" id="progressionList"></div>
+            <button class="clear-btn" id="clearProgression">清空</button>
+        </div>
+
+        <div class="preset-area">
+            <div id="presetRow"></div>
+            <div class="preset-hint" id="presetHint">把鼠标移到预设上查看说明 · 点击即可填充进行</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 页脚版权 ===== -->
+<footer class="page-footer">
+    © <span id="copyrightYear">2026</span> 和弦与音阶工具<span class="sep">·</span>保留所有权利
+</footer>
+
+<script>
+    // ==================== 基础数据 ====================
+    const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+
+    // ==================== 音名拼写系统 ====================
+    const LETTERS = ['C','D','E','F','G','A','B'];
+    const LETTER_SEMITONES = { C:0, D:2, E:4, F:5, G:7, A:9, B:11 };
+    function parseNoteName(name) {
+        const letter = name[0];
+        let accidental = 0;
+        for (let i = 1; i < name.length; i++) {
+            if (name[i] === '#') accidental++;
+            else if (name[i] === 'b') accidental--;
+        }
+        return { letter, accidental };
+    }
+    function pitchClassOf(name) {
+        const { letter, accidental } = parseNoteName(name);
+        return ((LETTER_SEMITONES[letter] + accidental) % 12 + 12) % 12;
+    }
+    function spellNote(rootName, letterOffset, semitones) {
+        const root = parseNoteName(rootName);
+        const rootLetterIdx = LETTERS.indexOf(root.letter);
+        const targetLetterIdx = ((rootLetterIdx + letterOffset) % 7 + 7) % 7;
+        const targetLetter = LETTERS[targetLetterIdx];
+        const rootSemitone = pitchClassOf(rootName);
+        const targetSemitone = ((rootSemitone + semitones) % 12 + 12) % 12;
+        const naturalSemitone = LETTER_SEMITONES[targetLetter];
+        let acc = ((targetSemitone - naturalSemitone) % 12 + 12) % 12;
+        if (acc > 6) acc -= 12;
+        let name = targetLetter;
+        if (acc === 1) name += '#';
+        else if (acc === 2) name += '##';
+        else if (acc === 3) name += '###';
+        else if (acc === -1) name += 'b';
+        else if (acc === -2) name += 'bb';
+        else if (acc === -3) name += 'bbb';
+        return name;
+    }
+    function buildSpellingMap(rootName, intervals, letterOffsets) {
+        const map = {};
+        const rootPC = pitchClassOf(rootName);
+        intervals.forEach((iv, i) => {
+            const pc = (rootPC + iv) % 12;
+            const name = spellNote(rootName, letterOffsets[i], iv);
+            if (name && map[pc] === undefined) map[pc] = name;
+        });
+        return map;
+    }
+    let currentSpellingMap = {};
+    function getNoteName(idx) {
+        const pc = ((idx % 12) + 12) % 12;
+        return currentSpellingMap[pc] || NOTE_NAMES[pc];
+    }
+
+    // ==================== 音程名称 ====================
+    const INTERVAL_NAMES = {
+        0: '根音', 1: '小二度', 2: '大二度', 3: '小三度', 4: '大三度',
+        5: '纯四度', 6: '三全音', 7: '纯五度', 8: '小六度', 9: '大六度',
+        10: '小七度', 11: '大七度', 12: '纯八度',
+        13: '小九度', 14: '大九度', 15: '增九度',
+        17: '纯十一度', 18: '增十一度',
+        20: '小十三度', 21: '大十三度'
+    };
+    function getIntervalName(semitones) {
+        return INTERVAL_NAMES[semitones] || (semitones + '半音');
+    }
+
+    // ==================== 音频 ====================
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContext();
+    function playTone(freq, duration = 1.2) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.35, audioCtx.currentTime + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.onended = () => {
+            try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+        };
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+    }
+    function getFreq(midi) { return 440 * Math.pow(2, (midi - 69) / 12); }
+
+    // ==================== 和弦定义 ====================
+    const CHORDS = {
+        'major':     { name: '大三和弦',     symbol: '',        intervals: [0,4,7],          letterOffsets: [0,2,4] },
+        'minor':     { name: '小三和弦',     symbol: 'm',       intervals: [0,3,7],          letterOffsets: [0,2,4] },
+        'sus4':      { name: '挂四和弦',     symbol: 'sus4',    intervals: [0,5,7],          letterOffsets: [0,3,4] },
+        'sus2':      { name: '挂二和弦',     symbol: 'sus2',    intervals: [0,2,7],          letterOffsets: [0,1,4] },
+        '7':         { name: '属七和弦',     symbol: '7',       intervals: [0,4,7,10],       letterOffsets: [0,2,4,6] },
+        'maj7':      { name: '大七和弦',     symbol: 'maj7',    intervals: [0,4,7,11],       letterOffsets: [0,2,4,6] },
+        'min7':      { name: '小七和弦',     symbol: 'm7',      intervals: [0,3,7,10],       letterOffsets: [0,2,4,6] },
+        'add9':      { name: '加九和弦',     symbol: 'add9',    intervals: [0,4,7,14],       letterOffsets: [0,2,4,1] },
+        'madd9':     { name: '小加九和弦',   symbol: 'madd9',   intervals: [0,3,7,14],       letterOffsets: [0,2,4,1] },
+        'six':       { name: '六和弦',       symbol: '6',       intervals: [0,4,7,9],        letterOffsets: [0,2,4,5] },
+        'm6':        { name: '小六和弦',     symbol: 'm6',      intervals: [0,3,7,9],        letterOffsets: [0,2,4,5] },
+        'dim':       { name: '减三和弦',     symbol: 'dim',     intervals: [0,3,6],          letterOffsets: [0,2,4] },
+        'aug':       { name: '增三和弦',     symbol: 'aug',     intervals: [0,4,8],          letterOffsets: [0,2,4] },
+        'm7b5':      { name: '半减七和弦',   symbol: 'm7b5',    intervals: [0,3,6,10],       letterOffsets: [0,2,4,6] },
+        'dim7':      { name: '减七和弦',     symbol: 'dim7',    intervals: [0,3,6,9],        letterOffsets: [0,2,4,6] },
+        'aug7':      { name: '增七和弦',     symbol: 'aug7',    intervals: [0,4,8,10],       letterOffsets: [0,2,4,6] },
+        'nine':      { name: '属九和弦',     symbol: '9',       intervals: [0,4,7,10,14],    letterOffsets: [0,2,4,6,1] },
+        'maj9':      { name: '大九和弦',     symbol: 'maj9',    intervals: [0,4,7,11,14],    letterOffsets: [0,2,4,6,1] },
+        'min9':      { name: '小九和弦',     symbol: 'm9',      intervals: [0,3,7,10,14],    letterOffsets: [0,2,4,6,1] },
+        '7b9':       { name: '属七降九',     symbol: '7b9',     intervals: [0,4,7,10,13],    letterOffsets: [0,2,4,6,1] },
+        '7#9':       { name: '属七升九',     symbol: '7#9',     intervals: [0,4,7,10,15],    letterOffsets: [0,2,4,6,1] },
+        'eleven':    { name: '十一和弦',     symbol: '11',      intervals: [0,4,7,10,14,17], letterOffsets: [0,2,4,6,1,3] },
+        'm11':       { name: '小十一和弦',   symbol: 'm11',     intervals: [0,3,7,10,14,17], letterOffsets: [0,2,4,6,1,3] },
+        'thirteen':  { name: '属十三和弦',   symbol: '13',      intervals: [0,4,7,10,14,21], letterOffsets: [0,2,4,6,1,5] },
+        'm13':       { name: '小十三和弦',   symbol: 'm13',     intervals: [0,3,7,10,14,21], letterOffsets: [0,2,4,6,1,5] },
+        'maj13':     { name: '大十三和弦',   symbol: 'maj13',   intervals: [0,4,7,11,14,21], letterOffsets: [0,2,4,6,1,5] },
+        '6/9':       { name: '六九和弦',     symbol: '6/9',     intervals: [0,4,7,9,14],     letterOffsets: [0,2,4,5,1] },
+        'm6/9':      { name: '小六九和弦',   symbol: 'm6/9',    intervals: [0,3,7,9,14],     letterOffsets: [0,2,4,5,1] },
+        '7#11':      { name: '属七升十一',   symbol: '7#11',    intervals: [0,4,7,10,18],    letterOffsets: [0,2,4,6,3] },
+        '7b13':      { name: '属七降十三',   symbol: '7b13',    intervals: [0,4,7,10,20],    letterOffsets: [0,2,4,6,5] },
+        'maj7#5':    { name: '大七升五',     symbol: 'maj7#5',  intervals: [0,4,8,11],       letterOffsets: [0,2,4,6] },
+        '7b5':       { name: '属七降五',     symbol: '7b5',     intervals: [0,4,6,10],       letterOffsets: [0,2,4,6] },
+        '7sus2':     { name: '属七挂二',     symbol: '7sus2',   intervals: [0,2,7,10],       letterOffsets: [0,1,4,6] },
+        '7sus4':     { name: '属七挂四',     symbol: '7sus4',   intervals: [0,5,7,10],       letterOffsets: [0,3,4,6] },
+        'add2':      { name: '加二和弦',     symbol: 'add2',    intervals: [0,2,4,7],        letterOffsets: [0,1,2,4] },
+        'add4':      { name: '加四和弦',     symbol: 'add4',    intervals: [0,4,5,7],        letterOffsets: [0,2,3,4] },
+        'power5':    { name: '强力和弦',     symbol: '5',       intervals: [0,7],            letterOffsets: [0,4] }
+    };
+
+    // ==================== 音阶定义 ====================
+    const SEVEN = [0,1,2,3,4,5,6];
+    const SCALES = {
+        'major':            { name: '大调音阶',         type: 'Ionian',              intervals: [0,2,4,5,7,9,11],    letterOffsets: SEVEN },
+        'natural_minor':    { name: '自然小调',         type: 'Aeolian',             intervals: [0,2,3,5,7,8,10],    letterOffsets: SEVEN },
+        'minor_pentatonic': { name: '小调五声',         type: 'Minor Pentatonic',    intervals: [0,3,5,7,10],        letterOffsets: [0,2,3,4,6] },
+        'major_pentatonic': { name: '大调五声',         type: 'Major Pentatonic',    intervals: [0,2,4,7,9],         letterOffsets: [0,1,2,4,5] },
+        'blues':            { name: '小调布鲁斯',       type: 'Blues',               intervals: [0,3,5,6,7,10],      letterOffsets: [0,2,3,4,4,6] },
+        'major_blues':      { name: '大调布鲁斯',       type: 'Major Blues',         intervals: [0,2,3,4,7,9],       letterOffsets: [0,1,2,2,4,5] },
+        'harmonic_minor':   { name: '和声小调',         type: 'Harmonic Minor',      intervals: [0,2,3,5,7,8,11],    letterOffsets: SEVEN },
+        'melodic_minor':    { name: '旋律小调',         type: 'Melodic Minor',       intervals: [0,2,3,5,7,9,11],    letterOffsets: SEVEN },
+        'dorian':           { name: '多利亚',           type: 'Dorian',              intervals: [0,2,3,5,7,9,10],    letterOffsets: SEVEN },
+        'mixolydian':       { name: '混合利底亚',       type: 'Mixolydian',          intervals: [0,2,4,5,7,9,10],    letterOffsets: SEVEN },
+        'phrygian':         { name: '弗里几亚',         type: 'Phrygian',            intervals: [0,1,3,5,7,8,10],    letterOffsets: SEVEN },
+        'lydian':           { name: '利底亚',           type: 'Lydian',              intervals: [0,2,4,6,7,9,11],    letterOffsets: SEVEN },
+        'locrian':          { name: '洛克里亚',         type: 'Locrian',             intervals: [0,1,3,5,6,8,10],    letterOffsets: SEVEN },
+        'harmonic_major':   { name: '和声大调',         type: 'Harmonic Major',      intervals: [0,2,4,5,7,8,11],    letterOffsets: SEVEN },
+        'bebop_dominant':   { name: 'Bebop 属',         type: 'Bebop Dominant',      intervals: [0,2,4,5,7,9,10,11], letterOffsets: [0,1,2,3,4,5,6,6] },
+        'bebop_major':      { name: 'Bebop 大调',       type: 'Bebop Major',         intervals: [0,2,4,5,7,8,9,11],  letterOffsets: [0,1,2,3,4,4,5,6] },
+        'bebop_minor':      { name: 'Bebop 小调',       type: 'Bebop Minor',         intervals: [0,2,3,5,7,9,10,11], letterOffsets: [0,1,2,3,4,5,6,6] },
+        'lydian_dominant':  { name: '利底亚属',         type: 'Lydian Dominant',     intervals: [0,2,4,6,7,9,10],    letterOffsets: SEVEN },
+        'altered':          { name: '改变音阶',         type: 'Altered',             intervals: [0,1,3,4,6,8,10],    letterOffsets: SEVEN },
+        'locrian_2':        { name: '洛克里亚升二',     type: 'Locrian #2',          intervals: [0,2,3,5,6,8,10],    letterOffsets: SEVEN },
+        'dorian_b2':        { name: '多利亚降二',       type: 'Dorian b2',           intervals: [0,1,3,5,7,9,10],    letterOffsets: SEVEN },
+        'lydian_augmented': { name: '利底亚增五',       type: 'Lydian Augmented',    intervals: [0,2,4,6,8,9,11],    letterOffsets: SEVEN },
+        'mixolydian_b6':    { name: '混合利底亚降六',   type: 'Mixolydian b6',       intervals: [0,2,4,5,7,8,10],    letterOffsets: SEVEN },
+        'super_locrian':    { name: '超洛克里亚',       type: 'Super Locrian',       intervals: [0,1,3,4,6,8,10],    letterOffsets: SEVEN },
+        'phrygian_dorian':  { name: '弗里几亚大调',     type: 'Phrygian Dominant',   intervals: [0,1,4,5,7,8,10],    letterOffsets: SEVEN },
+        'chinese':          { name: '中国五声(宫)',     type: 'Chinese Gong',        intervals: [0,2,4,7,9],         letterOffsets: [0,1,2,4,5] },
+        'japanese':         { name: '日本阳音阶',       type: 'Japanese Yo',         intervals: [0,2,4,7,9],         letterOffsets: [0,1,2,4,5] },
+        'kumoi':            { name: '日本Kumoi音阶',    type: 'Kumoi',               intervals: [0,2,3,7,8],         letterOffsets: [0,1,2,4,5] },
+        'in_sen':           { name: '日本阴音阶',       type: 'In-Sen',              intervals: [0,1,5,7,10],        letterOffsets: [0,1,3,4,6] },
+        'hirajoshi':        { name: '日本平调子',       type: 'Hirajoshi',           intervals: [0,2,3,7,8],         letterOffsets: [0,1,2,4,5] },
+        'arabic':           { name: '阿拉伯音阶',       type: 'Arabic',              intervals: [0,1,4,5,7,8,10],    letterOffsets: SEVEN },
+        'hungarian_minor':  { name: '匈牙利小调',       type: 'Hungarian Minor',     intervals: [0,2,3,6,7,8,11],    letterOffsets: SEVEN },
+        'romanian_minor':   { name: '罗马尼亚小调',     type: 'Romanian Minor',      intervals: [0,2,3,6,7,8,10],    letterOffsets: SEVEN },
+        'double_harmonic':  { name: '双重和声大调',     type: 'Double Harmonic',     intervals: [0,1,4,5,7,8,11],    letterOffsets: SEVEN },
+        'enigmatic':        { name: '神秘音阶',         type: 'Enigmatic',           intervals: [0,1,4,6,8,10,11],   letterOffsets: SEVEN },
+        'whole_tone':       { name: '全音阶',           type: 'Whole Tone',          intervals: [0,2,4,6,8,10],      letterOffsets: [0,1,2,3,4,6] },
+        'augmented':        { name: '增音阶',           type: 'Augmented',           intervals: [0,3,4,7,8,11],      letterOffsets: [0,1,2,4,4,6] },
+        'dim_hwm':          { name: '减音阶(全半)',     type: 'Dim WHM',             intervals: [0,2,3,5,6,8,9,11],  letterOffsets: [0,1,2,3,4,5,5,6] },
+        'dim_whh':          { name: '减音阶(半全)',     type: 'Dim HWM',             intervals: [0,1,3,4,6,7,9,10],  letterOffsets: [0,1,2,2,4,4,5,6] },
+        'chromatic':        { name: '半音阶',           type: 'Chromatic',           intervals: [0,1,2,3,4,5,6,7,8,9,10,11], letterOffsets: [0,1,1,2,2,3,4,4,5,5,6,6] }
+    };
+
+    function getFretPositions(maxFret, startX, totalWidth) {
+        const positions = [startX];
+        const scaleLength = totalWidth / (1 - Math.pow(2, -maxFret / 12));
+        for (let i = 1; i <= maxFret; i++) {
+            const dist = scaleLength * (1 - Math.pow(2, -i / 12));
+            positions.push(startX + dist);
+        }
+        return positions;
+    }
+
+    // ==================== 调内级数 ====================
+    function getChordDegree(chordKey, chordRootPC, keyRootPC) {
+        const dist = ((chordRootPC - keyRootPC) % 12 + 12) % 12;
+        const degreeMap = {
+            0:  { roman: 'I',   acc: ''  }, 1:  { roman: 'II',  acc: 'b' },
+            2:  { roman: 'II',  acc: ''  }, 3:  { roman: 'III', acc: 'b' },
+            4:  { roman: 'III', acc: ''  }, 5:  { roman: 'IV',  acc: ''  },
+            6:  { roman: 'IV',  acc: '#' }, 7:  { roman: 'V',   acc: ''  },
+            8:  { roman: 'VI',  acc: 'b' }, 9:  { roman: 'VI',  acc: ''  },
+            10: { roman: 'VII', acc: 'b' }, 11: { roman: 'VII', acc: ''  }
+        };
+        const info = degreeMap[dist];
+        if (!info) return { text: '?', inKey: false };
+        const intervals = CHORDS[chordKey].intervals;
+        const hasMinor3 = intervals.includes(3);
+        let roman = info.roman;
+        if (hasMinor3) roman = roman.toLowerCase();
+        if (chordKey === 'dim' || chordKey === 'dim7') roman += '°';
+        else if (chordKey === 'm7b5') roman += 'ø';
+        else if (chordKey === 'aug' || chordKey === 'aug7' || chordKey === 'maj7#5') roman += '+';
+        let suffix = '';
+        switch (chordKey) {
+            case 'major': case 'minor': case 'aug': case 'dim': break;
+            case 'power5': suffix = '5'; break;
+            case 'sus2': suffix = 'sus2'; break;
+            case 'sus4': suffix = 'sus4'; break;
+            case 'add2': suffix = 'add2'; break;
+            case 'add4': suffix = 'add4'; break;
+            case 'add9': suffix = 'add9'; break;
+            case 'madd9': suffix = 'add9'; break;
+            case 'six': case 'm6': suffix = '6'; break;
+            case '6/9': case 'm6/9': suffix = '6/9'; break;
+            case '7': case 'min7': case 'dim7': case 'm7b5': case 'aug7': case 'maj7#5': case '7b5': suffix = '7'; break;
+            case 'maj7': suffix = 'maj7'; break;
+            case '7sus2': suffix = '7sus2'; break;
+            case '7sus4': suffix = '7sus4'; break;
+            case 'nine': case 'min9': suffix = '9'; break;
+            case 'maj9': suffix = 'maj9'; break;
+            case '7b9': suffix = '7b9'; break;
+            case '7#9': suffix = '7#9'; break;
+            case 'eleven': suffix = '11'; break;
+            case 'm11': suffix = '11'; break;
+            case '7#11': suffix = '7#11'; break;
+            case 'thirteen': suffix = '13'; break;
+            case 'm13': suffix = '13'; break;
+            case 'maj13': suffix = '13'; break;
+            case '7b13': suffix = '7b13'; break;
+        }
+        const text = info.acc + roman + suffix;
+        const majorScale = [0,2,4,5,7,9,11];
+        const inKey = majorScale.includes(dist);
+        return { text, inKey };
+    }
+
+    // ==================== 顺阶和弦 ====================
+    function identifyChordKey(intervals) {
+        const key = intervals.join(',');
+        const map = {
+            '0,4,7': 'major', '0,3,7': 'minor', '0,4,8': 'aug', '0,3,6': 'dim',
+            '0,4,7,11': 'maj7', '0,4,7,10': '7', '0,3,7,10': 'min7',
+            '0,3,6,10': 'm7b5', '0,3,6,9': 'dim7', '0,4,8,10': 'aug7',
+            '0,4,8,11': 'maj7#5', '0,5,7,10': '7sus4'
+        };
+        return map[key] || null;
+    }
+    function romanNumeralForDiatonic(degreeIdx, intervals) {
+        const romans = ['I','II','III','IV','V','VI','VII'];
+        const r = romans[degreeIdx];
+        const third = intervals[1];
+        const fifth = intervals[2];
+        const seventh = intervals[3];
+        let base = (third === 3) ? r.toLowerCase() : r;
+        if (intervals.length === 3) {
+            if (fifth === 6) base += '°';
+            else if (fifth === 8) base += '+';
+            return base;
+        }
+        if (fifth === 6 && seventh === 9) return base + '°7';
+        if (fifth === 6 && seventh === 10) return base + 'ø7';
+        if (fifth === 8 && seventh === 10) return base + '+7';
+        if (seventh === 11) return base + 'maj7';
+        if (seventh === 10) return base + '7';
+        return base;
+    }
+    function getDiatonicChords(scaleKey, rootName) {
+        const scale = SCALES[scaleKey];
+        const intervals = scale.intervals;
+        const N = intervals.length;
+        const rootPC = pitchClassOf(rootName);
+        const spelling = buildSpellingMap(rootName, intervals, scale.letterOffsets);
+        const abs = [];
+        for (let oct = 0; oct < 3; oct++) {
+            for (const iv of intervals) abs.push(iv + oct * 12);
+        }
+        const result = [];
+        for (let i = 0; i < N; i++) {
+            const rootIv = abs[i];
+            const thirdIv = abs[i + 2] - rootIv;
+            const fifthIv = abs[i + 4] - rootIv;
+            const seventhIv = abs[i + 6] - rootIv;
+            const chordRootPC = (rootPC + intervals[i]) % 12;
+            const useSeventh = seventhIv === 9 || seventhIv === 10 || seventhIv === 11;
+            const intervalsToUse = useSeventh
+                ? [0, thirdIv, fifthIv, seventhIv]
+                : [0, thirdIv, fifthIv];
+            const noteNames = intervalsToUse.map(iv => {
+                const pc = (chordRootPC + iv) % 12;
+                return spelling[pc] || NOTE_NAMES[pc];
+            });
+            const chordKey = identifyChordKey(intervalsToUse);
+            const roman = romanNumeralForDiatonic(i, intervalsToUse);
+            const chordRootName = spelling[chordRootPC] || NOTE_NAMES[chordRootPC];
+            const symbol = chordRootName + (chordKey ? CHORDS[chordKey].symbol : '');
+            result.push({
+                index: i, roman, chordKey, chordRootName, chordRootPC,
+                intervals: intervalsToUse, noteNames, symbol
+            });
+        }
+        return result;
+    }
+
+    // ==================== 乐器渲染器 ====================
+    const INSTRUMENTS = {
+        piano: {
+            render(activeNotes, chordNotes, rootIdx) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'keyboard-wrapper';
+                const kb = document.createElement('div');
+                kb.className = 'keyboard';
+                kb.setAttribute('role', 'group');
+                kb.setAttribute('aria-label', '钢琴键盘，C2 到 B4');
+                const pattern = [
+                    {n:'C',b:false},{n:'C#',b:true},{n:'D',b:false},{n:'D#',b:true},
+                    {n:'E',b:false},{n:'F',b:false},{n:'F#',b:true},{n:'G',b:false},
+                    {n:'G#',b:true},{n:'A',b:false},{n:'A#',b:true},{n:'B',b:false}
+                ];
+                let whiteCount = 0;
+                for (let oct = 2; oct <= 4; oct++) {
+                    pattern.forEach(p => {
+                        const noteIdx = pitchClassOf(p.n);
+                        const midi = (oct + 1) * 12 + noteIdx;
+                        const isActive = activeNotes.has(noteIdx);
+                        const isRoot = isActive && noteIdx === rootIdx;
+
+                        const key = document.createElement('div');
+                        let cls = `key ${p.b ? 'black' : 'white'}`;
+                        if (isActive) {
+                            cls += isRoot ? ' playing-root' : ' playing-chord';
+                        }
+                        key.className = cls;
+                        key.dataset.freq = getFreq(midi);
+                        key.setAttribute('role', 'button');
+                        key.setAttribute('tabindex', '0');
+                        key.setAttribute('aria-label', `${p.n}${oct}，点击播放`);
+                        key.onclick = () => playTone(parseFloat(key.dataset.freq));
+                        key.onkeydown = (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                playTone(parseFloat(key.dataset.freq));
+                            }
+                        };
+                        if (!p.b) {
+                            key.textContent = p.n;
+                            kb.appendChild(key);
+                            whiteCount++;
+                        } else {
+                            key.style.left = `${whiteCount * 39 - 11}px`;
+                            kb.appendChild(key);
+                        }
+                    });
+                }
+                wrapper.appendChild(kb);
+                return wrapper;
+            }
+        },
+        guitar: {
+            maxFret: 12,
+            markerFrets: [3,5,7,9,12],
+            render(activeNotes, chordNotes, rootIdx) {
+                return this._renderFretboard(activeNotes, chordNotes, rootIdx, false);
+            },
+            _renderFretboard(activeNotes, chordNotes, rootIdx, isBass) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'fretboard-wrapper';
+                const fb = document.createElement('div');
+                fb.className = `fretboard ${isBass ? 'bass' : ''}`;
+                fb.setAttribute('role', 'group');
+                fb.setAttribute('aria-label', isBass ? '贝斯指板' : '吉他指板');
+                const labelsBottomToTop = isBass ? ['E','A','D','G'] : ['E','A','D','G','B','E'];
+                const midisBottomToTop  = isBass ? [40,45,50,55]   : [40,45,50,55,59,64];
+                const tuningIndices     = labelsBottomToTop.map(n => pitchClassOf(n));
+                const stringCount       = labelsBottomToTop.length;
+                const maxFret = this.maxFret;
+                const fretPos = getFretPositions(maxFret, 36, 680);
+                const nut = document.createElement('div');
+                nut.className = 'fret-line nut';
+                fb.appendChild(nut);
+                for (let i = 1; i <= maxFret; i++) {
+                    const line = document.createElement('div');
+                    line.className = 'fret-line';
+                    line.style.left = `${fretPos[i]}px`;
+                    fb.appendChild(line);
+                    const num = document.createElement('div');
+                    num.className = 'fret-number';
+                    num.textContent = i;
+                    num.style.left = `${fretPos[i]}px`;
+                    fb.appendChild(num);
+                }
+                this.markerFrets.forEach(f => {
+                    if (f > maxFret) return;
+                    const cx = (fretPos[f - 1] + fretPos[f]) / 2;
+                    if (f === 12) {
+                        [35, 65].forEach(pct => {
+                            const dot = document.createElement('div');
+                            dot.className = 'fret-marker double';
+                            dot.style.left = `${cx}px`;
+                            dot.style.top = `${pct}%`;
+                            fb.appendChild(dot);
+                        });
+                    } else {
+                        const dot = document.createElement('div');
+                        dot.className = 'fret-marker';
+                        dot.style.left = `${cx}px`;
+                        dot.style.top = '50%';
+                        fb.appendChild(dot);
+                    }
+                });
+                labelsBottomToTop.forEach((label, si) => {
+                    const str = document.createElement('div');
+                    str.className = `string string-${stringCount - si}`;
+                    str.dataset.tuning = label;
+                    fb.appendChild(str);
+                });
+                const stringTopPositions = isBass
+                    ? [88, 62.67, 37.33, 12]
+                    : [94, 76.4, 58.8, 41.2, 23.6, 6];
+                tuningIndices.forEach((openIdx, si) => {
+                    for (let f = 0; f <= maxFret; f++) {
+                        const noteIdx = (openIdx + f) % 12;
+                        if (activeNotes.has(noteIdx)) {
+                            const pt = document.createElement('div');
+                            pt.className = 'note-point playing-pulse';
+                            if (noteIdx === rootIdx) pt.classList.add('root-note');
+                            else if (chordNotes.has(noteIdx)) pt.classList.add('in-chord');
+                            pt.textContent = getNoteName(noteIdx);
+                            const cx = f === 0 ? 30 : (fretPos[f - 1] + fretPos[f]) / 2;
+                            pt.style.left = `${cx}px`;
+                            pt.style.top = `${stringTopPositions[si]}%`;
+                            const midi = midisBottomToTop[si] + f;
+                            const noteName = getNoteName(noteIdx);
+                            const roleLabel = noteIdx === rootIdx ? '根音' : (chordNotes.has(noteIdx) ? '和弦音' : '音阶音');
+                            pt.setAttribute('role', 'button');
+                            pt.setAttribute('tabindex', '0');
+                            pt.setAttribute('aria-label', `${noteName}（${roleLabel}），第 ${si+1} 弦第 ${f} 品，点击播放`);
+                            pt.onclick = (e) => { e.stopPropagation(); playTone(getFreq(midi)); };
+                            pt.onkeydown = (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    playTone(getFreq(midi));
+                                }
+                            };
+                            fb.appendChild(pt);
+                        }
+                    }
+                });
+                wrapper.appendChild(fb);
+                return wrapper;
+            }
+        },
+        bass: {
+            maxFret: 12,
+            markerFrets: [3,5,7,9,12],
+            render(activeNotes, chordNotes, rootIdx) {
+                return INSTRUMENTS.guitar._renderFretboard(activeNotes, chordNotes, rootIdx, true);
+            }
+        }
+    };
+
+    // ==================== 状态 ====================
+    let currentMode = 'chord';
+    let currentRoot = 'C';
+    let currentType = '7';
+    let currentInstrument = 'piano';
+    let currentKey = 'C';
+    let currentDiatonicScale = 'major';
+
+    let playerRunning = false;
+    let playerBPM = 100;
+    let playerBeatsPerBar = 4;
+    let nextBeatTime = 0;
+    let beatInBar = 0;
+    let scheduleTimer = null;
+    let metronomeEnabled = true;
+    let beatsPerChord = 2;
+    let beatsIntoChord = 0;
+    let progressionChordIndex = -1;
+    let progression = [];
+
+    let savedSpellingMap = null;
+
+    // ==================== URL 状态持久化 ====================
+    function syncURL() {
+        const params = new URLSearchParams();
+        if (currentMode !== 'chord') params.set('mode', currentMode);
+        if (currentRoot !== 'C') params.set('root', currentRoot);
+        const defaultType = currentMode === 'scale' ? 'major' : '7';
+        if (currentType !== defaultType) params.set('type', currentType);
+        if (currentKey !== 'C') params.set('key', currentKey);
+        if (currentDiatonicScale !== 'major') params.set('dscale', currentDiatonicScale);
+        if (currentInstrument !== 'piano') params.set('instr', currentInstrument);
+        const qs = params.toString();
+        const url = qs ? location.pathname + '?' + qs : location.pathname;
+        try {
+            history.replaceState(null, '', url);
+        } catch (e) { /* 某些环境下会失败，忽略 */ }
+    }
+
+    function loadFromURL() {
+        const params = new URLSearchParams(location.search);
+        const mode = params.get('mode');
+        const root = params.get('root');
+        const type = params.get('type');
+        const key = params.get('key');
+        const dscale = params.get('dscale');
+        const instr = params.get('instr');
+
+        if (mode && ['chord', 'scale', 'match'].includes(mode)) currentMode = mode;
+        if (root && NOTE_NAMES.includes(root)) currentRoot = root;
+        if (key && NOTE_NAMES.includes(key)) currentKey = key;
+        if (dscale && SCALES[dscale]) currentDiatonicScale = dscale;
+        if (instr && ['piano', 'guitar', 'bass'].includes(instr)) currentInstrument = instr;
+
+        if (type) {
+            if (currentMode === 'scale') {
+                if (SCALES[type]) currentType = type;
+            } else {
+                if (CHORDS[type]) currentType = type;
+            }
+        } else {
+            currentType = currentMode === 'scale' ? 'major' : '7';
+        }
+    }
+
+    // ==================== 和弦进行预设 ====================
+    const PROGRESSION_GROUPS = [
+        {
+            label: '流行',
+            presets: [
+                { label: 'I - V - vi - IV', degrees: [0,4,5,3], desc: '最经典的流行进行，无数歌曲使用（如 Let It Be、Don\'t Stop Believin\'）' },
+                { label: 'vi - IV - I - V', degrees: [5,3,0,4], desc: '伤感流行进行，常用于副歌（如 Africa、Grenade）' },
+                { label: 'I - vi - IV - V', degrees: [0,5,3,4], desc: '50 年代抒情进行（如 Stand By Me、Every Breath You Take）' },
+                { label: 'I - IV - V - I',  degrees: [0,3,4,0], desc: '传统终止式，教会音乐与儿歌中最常见' },
+                { label: 'I - vi - ii - V', degrees: [0,5,1,4], desc: '爵士转向进行，流行与爵士皆常用' },
+                { label: 'IV - I - V - vi', degrees: [3,0,4,5], desc: '流行变体，副歌常见' },
+                { label: 'I - iii - vi - IV', degrees: [0,2,5,3], desc: '伤感流行变体' },
+                { label: 'I - iii - IV - V',  degrees: [0,2,3,4], desc: '上行流行进行，明亮有力' }
+            ]
+        },
+        {
+            label: '爵士',
+            presets: [
+                { label: 'ii - V - I',         degrees: [1,4,0], desc: '爵士核心进行，最基础的终止式' },
+                { label: 'iii - vi - ii - V',  degrees: [2,5,1,4], desc: '爵士扩展二五，常用于桥段' },
+                { label: 'I - vi - ii - V',    degrees: [0,5,1,4], desc: '爵士 turnaround，常用于结尾' },
+                { label: 'ii - V - I - vi',    degrees: [1,4,0,5], desc: '爵士变体，回到 vi 继续循环' },
+                { label: 'vi - ii - V - I',    degrees: [5,1,4,0], desc: '五度下行，爵士标准收尾' },
+                { label: 'I - iii - vi - ii - V', degrees: [0,2,5,1,4], desc: '完整五度下行（Circle Progression）' },
+                { label: 'iii - vi - ii - V - I', degrees: [2,5,1,4,0], desc: '扩展五度下行，爵士练习常用' }
+            ]
+        },
+        {
+            label: '卡农',
+            presets: [
+                { label: '卡农完整版', degrees: [0,4,5,2,3,0,3,4], desc: '帕赫贝尔卡农八和弦进行，巴洛克经典' },
+                { label: '卡农简化版', degrees: [0,4,5,2,3,0], desc: '卡农前六个和弦，流行歌曲也常借用' }
+            ]
+        },
+        {
+            label: '小调',
+            presets: [
+                { label: 'i - VI - III - VII', degrees: [0,5,2,6], desc: '小调流行经典（如 Save Tonight、Numb）' },
+                { label: 'i - iv - v - i',     degrees: [0,3,4,0], desc: '小调基础进行，古典与民谣常用' },
+                { label: 'i - VII - VI - V',   degrees: [0,6,5,4], desc: '小调下行，史诗感强（如 Stairway to Heaven）' },
+                { label: 'i - v - VI - IV',    degrees: [0,4,5,3], desc: '小调流行变体' },
+                { label: 'i - VI - VII - i',   degrees: [0,5,6,0], desc: '小调循环进行' },
+                { label: 'i - iv - VII - III', degrees: [0,3,6,2], desc: '小调进行，常用于副歌' },
+                { label: '安达卢西亚',          degrees: [0,6,5,4], desc: '弗拉门戈经典进行，西班牙风味（如 Hit the Road Jack）' }
+            ]
+        },
+        {
+            label: '布鲁斯',
+            presets: [
+                { label: '12 小节布鲁斯',    degrees: [0,0,0,0,3,3,0,0,4,3,0,4], desc: '布鲁斯标准进行，即兴入门必学' },
+                { label: '小调布鲁斯',        degrees: [0,3,0,4], desc: '小调布鲁斯基础进行（i7-iv7-i7-V7）' }
+            ]
+        },
+        {
+            label: '摇滚',
+            presets: [
+                { label: 'I - IV - V',   degrees: [0,3,4], desc: '摇滚三和弦经典，简单有力' },
+                { label: 'I - bVII - IV', degrees: [0,6,3], desc: '摇滚进行，Mixolydian 风味（如 Sweet Home Alabama）' }
+            ]
+        },
+        {
+            label: '民谣',
+            presets: [
+                { label: 'I - IV - I - V', degrees: [0,3,0,4], desc: '民谣常见进行，朴实温暖' },
+                { label: 'I - V - IV - V', degrees: [0,4,3,4], desc: '民谣变体，叙述感强' },
+                { label: 'I - V - I - IV', degrees: [0,4,0,3], desc: '民谣基础进行' },
+                { label: 'I - IV - vi - V', degrees: [0,3,5,4], desc: '流行民谣，情感充沛' }
+            ]
+        }
+    ];
+
+    function initUI() {
+        // 自动填入当前年份
+        const yearEl = document.getElementById('copyrightYear');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+        loadFromURL();
+
+        const rootSel = document.getElementById('rootNote');
+        NOTE_NAMES.forEach(n => {
+            const o = document.createElement('option');
+            o.value = n; o.textContent = n;
+            rootSel.appendChild(o);
+        });
+        rootSel.value = currentRoot;
+
+        const keySel = document.getElementById('keySelect');
+        NOTE_NAMES.forEach(n => {
+            const o = document.createElement('option');
+            o.value = n; o.textContent = n + ' 大调';
+            keySel.appendChild(o);
+        });
+        keySel.value = currentKey;
+
+        const dscaleSel = document.getElementById('diatonicScaleType');
+        dscaleSel.value = currentDiatonicScale;
+        dscaleSel.onchange = e => {
+            currentDiatonicScale = e.target.value;
+            renderDiatonicSection();
+            renderProgression();
+            syncURL();
+        };
+
+        keySel.onchange = e => { currentKey = e.target.value; updateApp(); };
+
+        document.querySelectorAll('.instr-btn').forEach((b, i) => {
+            b.classList.toggle('active',
+                (i === 0 && currentInstrument === 'piano') ||
+                (i === 1 && currentInstrument === 'guitar') ||
+                (i === 2 && currentInstrument === 'bass')
+            );
+        });
+
+        initPlayerUI();
+        renderBeatIndicator();
+        renderPresets();
+        renderProgression();
+        updateTypeOptions();
+        rootSel.onchange = e => { currentRoot = e.target.value; updateApp(); };
+        document.getElementById('typeSelect').onchange = e => { currentType = e.target.value; updateApp(); };
+        updateApp();
+    }
+
+    function renderPresets() {
+        const row = document.getElementById('presetRow');
+        const hint = document.getElementById('presetHint');
+        row.innerHTML = '';
+        PROGRESSION_GROUPS.forEach(group => {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'preset-group';
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'preset-group-label';
+            labelSpan.textContent = group.label;
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'preset-group-buttons';
+            group.presets.forEach(preset => {
+                const btn = document.createElement('button');
+                btn.className = 'preset-btn';
+                btn.textContent = preset.label;
+                btn.title = preset.desc;
+                btn.onclick = () => {
+                    progression = [...preset.degrees];
+                    progressionChordIndex = -1;
+                    renderProgression();
+                    hint.textContent = preset.desc;
+                };
+                btn.onmouseenter = () => { hint.textContent = preset.desc; };
+                btn.onmouseleave = () => {
+                    hint.textContent = '把鼠标移到预设上查看说明 · 点击即可填充进行';
+                };
+                btnContainer.appendChild(btn);
+            });
+            groupDiv.appendChild(labelSpan);
+            groupDiv.appendChild(btnContainer);
+            row.appendChild(groupDiv);
+        });
+    }
+
+    function initPlayerUI() {
+        const bpmInput = document.getElementById('bpmInput');
+        bpmInput.oninput = e => {
+            const v = parseInt(e.target.value);
+            if (!isNaN(v) && v >= 40 && v <= 240) playerBPM = v;
+        };
+        bpmInput.onchange = e => {
+            let v = parseInt(e.target.value);
+            if (isNaN(v)) v = 100;
+            v = Math.max(40, Math.min(240, v));
+            e.target.value = v;
+            playerBPM = v;
+        };
+        document.getElementById('timeSignature').onchange = e => {
+            playerBeatsPerBar = parseInt(e.target.value);
+            beatInBar = 0;
+            renderBeatIndicator();
+        };
+        document.getElementById('beatsPerChordSelect').onchange = e => {
+            beatsPerChord = parseInt(e.target.value);
+            beatsIntoChord = 0;
+            progressionChordIndex = -1;
+        };
+        document.getElementById('metronomeToggle').onclick = e => {
+            metronomeEnabled = !metronomeEnabled;
+            e.target.classList.toggle('active', metronomeEnabled);
+            e.target.textContent = metronomeEnabled ? '🔔 节拍器 开' : '🔔 节拍器 关';
+        };
+        document.getElementById('playBtn').onclick = togglePlay;
+        document.getElementById('clearProgression').onclick = () => {
+            progression = [];
+            progressionChordIndex = -1;
+            renderProgression();
+        };
+    }
+
+    function updateTypeOptions() {
+        const sel = document.getElementById('typeSelect');
+        const lbl = document.getElementById('typeSelectLabel');
+        sel.innerHTML = '';
+        const opts = currentMode === 'scale' ? SCALES : CHORDS;
+        lbl.textContent = currentMode === 'scale' ? '音阶类型' : '和弦类型';
+        if (!opts[currentType]) currentType = Object.keys(opts)[0];
+        for (const [k, v] of Object.entries(opts)) {
+            const o = document.createElement('option');
+            o.value = k; o.textContent = v.name;
+            sel.appendChild(o);
+        }
+        sel.value = currentType;
+    }
+
+    function getActiveData() {
+        const rootIdx = pitchClassOf(currentRoot);
+        const active = new Set();
+        const chord = new Set();
+        let intervals = [];
+        if (currentMode === 'scale') {
+            intervals = SCALES[currentType].intervals;
+        } else {
+            intervals = CHORDS[currentType].intervals;
+        }
+        intervals.forEach(iv => {
+            const idx = (rootIdx + iv) % 12;
+            active.add(idx);
+            if (currentMode !== 'scale') chord.add(idx);
+        });
+        return { active, chord, rootIdx, intervals };
+    }
+
+    function getSymbolText() {
+        if (currentMode === 'scale') {
+            return `${currentRoot} ${SCALES[currentType].type}`;
+        }
+        return `${currentRoot}${CHORDS[currentType].symbol}`;
+    }
+
+    function updateApp() {
+        document.querySelectorAll('.tab-btn').forEach((b, i) => {
+            const active = (i === 0 && currentMode === 'chord') ||
+                           (i === 1 && currentMode === 'scale') ||
+                           (i === 2 && currentMode === 'match');
+            b.classList.toggle('active', active);
+            b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        document.getElementById('view-chord-scale').style.display = currentMode === 'match' ? 'none' : 'block';
+        document.getElementById('view-match').style.display = currentMode === 'match' ? 'block' : 'none';
+        document.getElementById('keySelectGroup').style.display = currentMode === 'chord' ? 'flex' : 'none';
+        document.getElementById('diatonic-section').style.display = currentMode === 'chord' ? 'block' : 'none';
+        document.getElementById('player-section').style.display = currentMode === 'chord' ? 'flex' : 'none';
+        updateTypeOptions();
+
+        if (currentMode === 'scale') {
+            currentSpellingMap = buildSpellingMap(currentRoot, SCALES[currentType].intervals, SCALES[currentType].letterOffsets);
+        } else {
+            currentSpellingMap = buildSpellingMap(currentRoot, CHORDS[currentType].intervals, CHORDS[currentType].letterOffsets);
+        }
+
+        const { active, chord, rootIdx, intervals } = getActiveData();
+        let title = '', btnText = '', subInfo = '', notesHTML = '';
+        if (currentMode === 'chord' || currentMode === 'match') {
+            title = `${currentRoot} ${CHORDS[currentType].name}`;
+            btnText = '试听和弦';
+            intervals.forEach(iv => {
+                const ni = (rootIdx + iv) % 12;
+                notesHTML += `<div class="note-tag active"><span class="note-name">${getNoteName(ni)}</span><span class="note-sub">${getIntervalName(iv)}</span></div>`;
+            });
+        } else {
+            const sd = SCALES[currentType];
+            title = `${currentRoot} ${sd.name}`;
+            btnText = '试听音阶';
+            subInfo = `${sd.type}`;
+            intervals.forEach((iv, i) => {
+                const ni = (rootIdx + iv) % 12;
+                notesHTML += `<div class="note-tag active"><span class="note-name">${getNoteName(ni)}</span><span class="note-sub">${getIntervalName(iv)} · ${i+1}</span></div>`;
+            });
+        }
+        document.getElementById('resultTitle').textContent = title;
+        document.getElementById('playBtnText').textContent = btnText;
+        document.getElementById('resultSubInfo').textContent = subInfo;
+        document.getElementById('notesDisplay').innerHTML = notesHTML;
+
+        const badge = document.getElementById('symbolBadge');
+        badge.textContent = getSymbolText();
+        badge.title = `点击复制：${getSymbolText()}`;
+        badge.onclick = () => {
+            const txt = getSymbolText();
+            navigator.clipboard?.writeText(txt).then(() => {
+                const old = badge.textContent;
+                badge.textContent = '已复制 ✓';
+                setTimeout(() => badge.textContent = old, 900);
+            }).catch(() => {});
+        };
+
+        const degreeBadge = document.getElementById('degreeBadge');
+        if (currentMode === 'chord') {
+            const chordRootPC = pitchClassOf(currentRoot);
+            const keyRootPC = pitchClassOf(currentKey);
+            const deg = getChordDegree(currentType, chordRootPC, keyRootPC);
+            degreeBadge.textContent = deg.text;
+            degreeBadge.title = `在 ${currentKey} 大调中：${deg.inKey ? '调内和弦' : '变音和弦'}`;
+            degreeBadge.classList.toggle('out-of-key', !deg.inKey);
+            degreeBadge.classList.remove('hidden');
+        } else {
+            degreeBadge.classList.add('hidden');
+        }
+
+        if (currentMode === 'chord') {
+            renderDiatonicSection();
+            renderProgression();
+        }
+        if (currentMode === 'match') renderMatchList(rootIdx, CHORDS[currentType].intervals);
+        if (!playerRunning) {
+            renderInstrument(active, chord, rootIdx);
+        }
+        syncURL();
+    }
+
+    function renderDiatonicSection() {
+        const list = document.getElementById('diatonicList');
+        const subtitle = document.getElementById('diatonicSubtitle');
+        const scaleInfo = SCALES[currentDiatonicScale];
+        subtitle.textContent = `${currentKey} ${scaleInfo.name}`;
+        const chords = getDiatonicChords(currentDiatonicScale, currentKey);
+        list.innerHTML = '';
+        chords.forEach(dc => {
+            const card = document.createElement('div');
+            card.className = 'diatonic-card';
+            if (dc.chordRootPC === pitchClassOf(currentRoot) && dc.chordKey === currentType) {
+                card.classList.add('active');
+            }
+            card.innerHTML = `<div class="degree">${dc.roman}</div><div class="symbol">${dc.symbol}</div><div class="notes">${dc.noteNames.join(' ')}</div>`;
+            const addBtn = document.createElement('button');
+            addBtn.className = 'diatonic-add-btn';
+            addBtn.textContent = '+';
+            addBtn.title = '加入和弦进行';
+            addBtn.setAttribute('aria-label', `把 ${dc.symbol} 加入和弦进行`);
+            addBtn.onclick = (e) => {
+                e.stopPropagation();
+                progression.push(dc.index);
+                renderProgression();
+            };
+            card.appendChild(addBtn);
+            card.onclick = () => {
+                currentRoot = NOTE_NAMES[dc.chordRootPC];
+                if (dc.chordKey && CHORDS[dc.chordKey]) {
+                    currentType = dc.chordKey;
+                    document.getElementById('rootNote').value = currentRoot;
+                    updateApp();
+                } else {
+                    document.getElementById('rootNote').value = currentRoot;
+                    updateApp();
+                }
+                dc.intervals.forEach((iv, i) => {
+                    const midi = 60 + dc.chordRootPC + iv;
+                    setTimeout(() => playTone(getFreq(midi)), i * 150);
+                });
+            };
+            list.appendChild(card);
+        });
+    }
+
+    function renderProgression() {
+        const list = document.getElementById('progressionList');
+        const diatonic = getDiatonicChords(currentDiatonicScale, currentKey);
+        list.innerHTML = '';
+        if (progression.length === 0) {
+            list.innerHTML = '<span style="color:#9ca3af;font-size:11px;">点击顺阶和弦卡片的 + 号加入进行，或选择下方预设</span>';
+            return;
+        }
+        if (progressionChordIndex >= progression.length) progressionChordIndex = -1;
+        progression.forEach((degIdx, i) => {
+            const chord = diatonic[degIdx];
+            if (!chord) return;
+            const chip = document.createElement('span');
+            chip.className = 'progression-chip';
+            if (i === progressionChordIndex) chip.classList.add('playing');
+            chip.innerHTML = `<span class="chip-roman">${chord.roman}</span><span class="chip-symbol">${chord.symbol}</span><button class="chip-remove" title="移除">×</button>`;
+            chip.querySelector('.chip-remove').onclick = (e) => {
+                e.stopPropagation();
+                progression.splice(i, 1);
+                if (progressionChordIndex >= progression.length) progressionChordIndex = -1;
+                renderProgression();
+            };
+            list.appendChild(chip);
+        });
+    }
+
+    function renderMatchList(rootIdx, chordIntervals) {
+        const list = document.getElementById('matchList');
+        list.innerHTML = '';
+        for (const [sKey, sData] of Object.entries(SCALES)) {
+            let matched = 0, missing = [];
+            chordIntervals.forEach(ci => {
+                const cn = (rootIdx + ci) % 12;
+                if (sData.intervals.some(si => (rootIdx + si) % 12 === cn)) matched++;
+                else missing.push(cn);
+            });
+            if (matched === chordIntervals.length || missing.length <= 1) {
+                const item = document.createElement('div');
+                item.className = 'match-item';
+                const header = document.createElement('div');
+                header.className = 'match-header';
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'match-title';
+                titleDiv.innerHTML = `${currentRoot} ${sData.name}<span class="match-title-sub">${sData.type}</span>`;
+                const rate = document.createElement('div');
+                rate.className = `match-rate ${matched === chordIntervals.length ? 'success' : ''}`;
+                rate.textContent = matched === chordIntervals.length
+                    ? `✓ 全部匹配 ${matched}/${chordIntervals.length}`
+                    : `缺${missing.length}音 ${matched}/${chordIntervals.length}`;
+                const playBtn = document.createElement('button');
+                playBtn.className = 'play-btn';
+                playBtn.style.padding = '3px 10px';
+                playBtn.style.marginLeft = '0';
+                playBtn.setAttribute('aria-label', `试听 ${currentRoot} ${sData.name}`);
+                playBtn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>`;
+                playBtn.onclick = () => {
+                    sData.intervals.forEach((iv, i) => {
+                        const midi = 60 + pitchClassOf(currentRoot) + iv;
+                        setTimeout(() => playTone(getFreq(midi)), i * 180);
+                    });
+                };
+                header.append(titleDiv, rate, playBtn);
+                item.appendChild(header);
+                const sSpelling = buildSpellingMap(currentRoot, sData.intervals, sData.letterOffsets);
+                const nc = document.createElement('div');
+                nc.className = 'notes-display';
+                sData.intervals.forEach((iv, i) => {
+                    const ni = (rootIdx + iv) % 12;
+                    const isMiss = missing.includes(ni);
+                    const tag = document.createElement('div');
+                    tag.className = `note-tag ${isMiss ? 'missing' : 'active'}`;
+                    const name = sSpelling[ni] || NOTE_NAMES[ni];
+                    tag.innerHTML = `<span class="note-name">${name}</span><span class="note-sub">${getIntervalName(iv)} · ${i+1}</span>`;
+                    nc.appendChild(tag);
+                });
+                item.appendChild(nc);
+                list.appendChild(item);
+            }
+        }
+    }
+
+    function renderInstrument(active, chord, rootIdx) {
+        const container = document.getElementById('instrument-view');
+        container.innerHTML = '';
+        container.appendChild(INSTRUMENTS[currentInstrument].render(active, chord, rootIdx));
+        const tips = {
+            piano: '点击琴键可试听单音 · C2–B4',
+            guitar: '点击圆点试听 · 红=根音 橙=和弦音 蓝=音阶音 · 0–12品',
+            bass: '点击圆点试听 · 标准调弦 E A D G · 0–12品'
+        };
+        const tipText = document.getElementById('tipText');
+        tipText.textContent = tips[currentInstrument];
+    }
+
+    function playCurrentMode() {
+        const { rootIdx, intervals } = getActiveData();
+        intervals.forEach((iv, i) => {
+            const midi = 48 + rootIdx + iv;
+            setTimeout(() => playTone(getFreq(midi)), i * 150);
+        });
+    }
+
+    function syncInstrumentToPlayingChord() {
+        const diatonic = getDiatonicChords(currentDiatonicScale, currentKey);
+        const chord = diatonic[progression[progressionChordIndex]];
+        if (!chord) return;
+        if (savedSpellingMap === null) {
+            savedSpellingMap = currentSpellingMap;
+        }
+        const chordRootName = NOTE_NAMES[chord.chordRootPC];
+        if (chord.chordKey && CHORDS[chord.chordKey]) {
+            currentSpellingMap = buildSpellingMap(
+                chordRootName,
+                CHORDS[chord.chordKey].intervals,
+                CHORDS[chord.chordKey].letterOffsets
+            );
+        } else {
+            currentSpellingMap = {};
+        }
+        const active = new Set();
+        const chordSet = new Set();
+        chord.intervals.forEach(iv => {
+            const idx = (chord.chordRootPC + iv) % 12;
+            active.add(idx);
+            chordSet.add(idx);
+        });
+        renderInstrument(active, chordSet, chord.chordRootPC);
+        const tipText = document.getElementById('tipText');
+        tipText.textContent = `🎵 正在播放：${chord.symbol}  (${chord.roman})`;
+        tipText.classList.add('playing');
+    }
+
+    function restoreInstrumentFromUserSelection() {
+        if (savedSpellingMap !== null) {
+            currentSpellingMap = savedSpellingMap;
+            savedSpellingMap = null;
+        }
+        if (currentMode === 'scale') {
+            currentSpellingMap = buildSpellingMap(currentRoot, SCALES[currentType].intervals, SCALES[currentType].letterOffsets);
+        } else {
+            currentSpellingMap = buildSpellingMap(currentRoot, CHORDS[currentType].intervals, CHORDS[currentType].letterOffsets);
+        }
+        const { active, chord, rootIdx } = getActiveData();
+        renderInstrument(active, chord, rootIdx);
+        const tips = {
+            piano: '点击琴键可试听单音 · C2–B4',
+            guitar: '点击圆点试听 · 红=根音 橙=和弦音 蓝=音阶音 · 0–12品',
+            bass: '点击圆点试听 · 标准调弦 E A D G · 0–12品'
+        };
+        const tipText = document.getElementById('tipText');
+        tipText.textContent = tips[currentInstrument];
+        tipText.classList.remove('playing');
+    }
+
+    function togglePlay() {
+        if (playerRunning) stopPlayer();
+        else startPlayer();
+    }
+    function startPlayer() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        playerRunning = true;
+        nextBeatTime = audioCtx.currentTime + 0.06;
+        beatInBar = 0;
+        beatsIntoChord = 0;
+        progressionChordIndex = -1;
+        updatePlayButton();
+        scheduleLoop();
+    }
+    function stopPlayer() {
+        playerRunning = false;
+        if (scheduleTimer) { clearTimeout(scheduleTimer); scheduleTimer = null; }
+        updatePlayButton();
+        clearBeatVisual();
+        clearProgressionHighlight();
+        progressionChordIndex = -1;
+        if (currentMode === 'chord') {
+            restoreInstrumentFromUserSelection();
+        }
+    }
+    function updatePlayButton() {
+        const btn = document.getElementById('playBtn');
+        if (!btn) return;
+        btn.textContent = playerRunning ? '⏹ 停止' : '▶ 播放';
+        btn.classList.toggle('playing', playerRunning);
+    }
+    function scheduleLoop() {
+        if (!playerRunning) return;
+        const now = audioCtx.currentTime;
+        while (nextBeatTime < now + 0.15) {
+            const beat = beatInBar;
+            const time = nextBeatTime;
+            const delay = Math.max(0, (time - now) * 1000);
+            if (metronomeEnabled) scheduleClickAt(time, beat === 0);
+            setTimeout(() => {
+                if (!playerRunning) return;
+                updateBeatVisual(beat);
+                if (progression.length > 0) {
+                    if (beatsIntoChord === 0) {
+                        progressionChordIndex = (progressionChordIndex + 1) % progression.length;
+                        playProgressionChord();
+                        highlightCurrentProgression();
+                        syncInstrumentToPlayingChord();
+                    }
+                    beatsIntoChord = (beatsIntoChord + 1) % beatsPerChord;
+                }
+            }, delay);
+            nextBeatTime += 60.0 / playerBPM;
+            beatInBar = (beatInBar + 1) % playerBeatsPerBar;
+        }
+        scheduleTimer = setTimeout(scheduleLoop, 50);
+    }
+    function scheduleClickAt(time, isDownbeat) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = isDownbeat ? 1100 : 800;
+        osc.type = 'square';
+        gain.gain.setValueAtTime(0.0001, time);
+        gain.gain.linearRampToValueAtTime(0.13, time + 0.002);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.onended = () => {
+            try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+        };
+        osc.start(time);
+        osc.stop(time + 0.06);
+    }
+    function updateBeatVisual(beat) {
+        document.querySelectorAll('.beat-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === beat);
+        });
+    }
+    function clearBeatVisual() {
+        document.querySelectorAll('.beat-dot').forEach(d => d.classList.remove('active'));
+    }
+    function playProgressionChord() {
+        const diatonic = getDiatonicChords(currentDiatonicScale, currentKey);
+        const chord = diatonic[progression[progressionChordIndex]];
+        if (!chord) return;
+        const chordDuration = (60 / playerBPM) * beatsPerChord;
+        const baseMidi = 48;
+        chord.intervals.forEach(iv => {
+            const midi = baseMidi + chord.chordRootPC + iv;
+            playTone(getFreq(midi), Math.max(0.3, chordDuration * 0.9));
+        });
+    }
+    function highlightCurrentProgression() {
+        document.querySelectorAll('.diatonic-card').forEach(c => c.classList.remove('playing'));
+        document.querySelectorAll('.progression-chip').forEach(c => c.classList.remove('playing'));
+        if (progressionChordIndex < 0 || progression.length === 0) return;
+        const degIdx = progression[progressionChordIndex];
+        const diatonicCards = document.querySelectorAll('.diatonic-card');
+        if (diatonicCards[degIdx]) diatonicCards[degIdx].classList.add('playing');
+        const chips = document.querySelectorAll('.progression-chip');
+        if (chips[progressionChordIndex]) chips[progressionChordIndex].classList.add('playing');
+    }
+    function clearProgressionHighlight() {
+        document.querySelectorAll('.diatonic-card').forEach(c => c.classList.remove('playing'));
+        document.querySelectorAll('.progression-chip').forEach(c => c.classList.remove('playing'));
+    }
+    function renderBeatIndicator() {
+        const container = document.getElementById('beatIndicator');
+        container.innerHTML = '';
+        for (let i = 0; i < playerBeatsPerBar; i++) {
+            const dot = document.createElement('span');
+            dot.className = 'beat-dot' + (i === 0 ? ' downbeat' : '');
+            container.appendChild(dot);
+        }
+    }
+
+    window.switchTab = mode => {
+        currentMode = mode;
+        if (mode !== 'chord' && playerRunning) stopPlayer();
+        updateApp();
+    };
+    window.setInstrument = instr => {
+        currentInstrument = instr;
+        document.querySelectorAll('.instr-btn').forEach((b, i) => {
+            b.classList.toggle('active',
+                (i === 0 && instr === 'piano') ||
+                (i === 1 && instr === 'guitar') ||
+                (i === 2 && instr === 'bass')
+            );
+        });
+        updateApp();
+    };
+
+    initUI();
+</script>
+</body>
+</html>
